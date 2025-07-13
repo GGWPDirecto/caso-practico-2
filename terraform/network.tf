@@ -1,4 +1,4 @@
-# Define la red virtual (VNet) principal del proyecto.
+# Define l red virtual (VNet) principal del proyecto.
 resource "azurerm_virtual_network" "vnet" {
   name                = "vnet-casopractico2"
   address_space       = ["10.0.0.0/16"]
