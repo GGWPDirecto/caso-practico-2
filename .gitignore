@@ -1,0 +1,13 @@
+# Ficheros de estado y planes de Terraform
+*.tfstate
+*.tfstate.*
+*.tfplan
+
+# Directorio de trabajo local de Terraform
+.terraform/
+
+# Ficheros de crash logs
+crash.log
+
+# Ficheros específicos del editor
+.vscode/
