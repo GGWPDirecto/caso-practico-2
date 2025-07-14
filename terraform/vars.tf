@@ -11,3 +11,11 @@ variable "ssh_user" {
   description = "Nombre de usuario para la conexión SSH a la máquina virtual."
   default     = "azureuser"
 }
+
+locals {
+  common_tags = {
+    # Etiquetado requerido por el caso práctico.
+    environment = "casopractico2"
+    ManagedBy   = "Terraform"
+  }
+}
