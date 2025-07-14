@@ -74,3 +74,11 @@ resource "azurerm_network_interface_security_group_association" "nic_nsg_assoc" 
   network_interface_id      = azurerm_network_interface.nic_vm.id
   network_security_group_id = azurerm_network_security_group.nsg_vm.id
 }
+
+# Subred dedicada para los nodos del clúster de Azure Kubernetes Service (AKS).
+resource "azurerm_subnet" "subnet_aks" {
+  name                 = "subnet-aks"
+  resource_group_name  = azurerm_resource_group.rg.name
+  virtual_network_name = azurerm_virtual_network.vnet.name
+  address_prefixes     = ["10.0.2.0/24"]
+}
