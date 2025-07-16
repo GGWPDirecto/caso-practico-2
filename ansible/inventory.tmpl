@@ -1,10 +1,12 @@
-# ansible/inventory.tmpl---
+# ansible/inventory.yml.tmpl
+---
 all:
   vars:
     acr_login_server: "${acr_login_server}"
     acr_username: "${acr_username}"
+    key_vault_url: "${key_vault_url}"
+    acr_secret_name: "acr-admin-password"
     nginx_image: "${acr_login_server}/webapp:casopractico2"
-    # La contraseña se gestionará con Key Vault.
 
 vm:
   hosts:

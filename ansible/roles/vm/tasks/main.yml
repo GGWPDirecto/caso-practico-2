@@ -1,5 +1,5 @@
-# Fichero de tareas para configurar la máquina virtual en Azure
-
+# ansible/roles/vm/tasks/main.yml
+---
 - name: Actualizar la caché de paquetes del sistema
   ansible.builtin.apt:
     update_cache: yes
@@ -12,7 +12,6 @@
 - name: Obtener la contraseña del ACR desde Azure Key Vault
   set_fact:
     acr_password_from_vault: "{{ lookup('azure.azcollection.azure_keyvault_secret', acr_secret_name, vault_url=key_vault_url) }}"
-  # La opción 'no_log' evita que la contraseña se muestre en los logs de Ansible.
   no_log: true
 
 - name: Iniciar sesión en el ACR desde la VM usando el secreto del Key Vault
@@ -20,21 +19,21 @@
     username: "{{ acr_username }}"
     password: "{{ acr_password_from_vault }}"
     registry: "{{ acr_login_server }}"
-  no_log: true # También ocultamos esta tarea en los logs por seguridad.
+  no_log: true
 
-- name: Descargar la imagen de Nginx y ejecutarla como un servicio
+- name: Desplegar el contenedor Nginx
   containers.podman.podman_container:
     name: nginx-webapp
-    image: "{{ nginx_image }}" # Usa la imagen que subimos al ACR
+    image: "{{ nginx_image }}"
     state: started
     ports:
-      - "443:443" # Expone el puerto 443 de la VM al 443 del contenedor
-    generate_systemd: yes # Crea un servicio para que sea persistente
-    restart_policy: always # Reinicia el contenedor si la VM se reinicia
+      - "443:443"
+    generate_systemd: true
+    restart_policy: always
 
 - name: Habilitar y arrancar el servicio del contenedor
   ansible.builtin.systemd:
-    name: container-nginx-webapp.service # El servicio creado por Podman
+    name: container-nginx-webapp.service
     enabled: yes
     state: started
     daemon_reload: yes
