@@ -1,5 +1,4 @@
----
-# Tareas para configurar la máquina virtual en Azure
+# Fichero de tareas para configurar la máquina virtual en Azure
 
 - name: Actualizar la caché de paquetes del sistema
   ansible.builtin.apt:
@@ -10,11 +9,18 @@
     name: podman
     state: present
 
-- name: Iniciar sesión en el ACR desde la VM
+- name: Obtener la contraseña del ACR desde Azure Key Vault
+  set_fact:
+    acr_password_from_vault: "{{ lookup('azure.azcollection.azure_keyvault_secret', acr_secret_name, vault_url=key_vault_url) }}"
+  # La opción 'no_log' evita que la contraseña se muestre en los logs de Ansible.
+  no_log: true
+
+- name: Iniciar sesión en el ACR desde la VM usando el secreto del Key Vault
   containers.podman.podman_login:
     username: "{{ acr_username }}"
-    password: "{{ acr_password }}"
+    password: "{{ acr_password_from_vault }}"
     registry: "{{ acr_login_server }}"
+  no_log: true # También ocultamos esta tarea en los logs por seguridad.
 
 - name: Descargar la imagen de Nginx y ejecutarla como un servicio
   containers.podman.podman_container:

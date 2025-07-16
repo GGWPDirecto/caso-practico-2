@@ -1,25 +1,21 @@
 # terraform/ansible_integration.tf
-# Este fichero se encarga de generar la configuración para Ansible.
+
+# Genera un inventario dinámico SOLO con datos no sensibles.
 
 resource "local_file" "ansible_inventory" {
-  # Contenido del fichero que se va a crear.
-  # La función 'templatefile' lee la plantilla y reemplaza las variables.
   content = templatefile("../ansible/inventory.tmpl", {
     vm_ip            = azurerm_public_ip.pip_vm.ip_address
     ssh_user         = var.ssh_user
     acr_login_server = azurerm_container_registry.acr.login_server
     acr_username     = azurerm_container_registry.acr.admin_username
-    acr_password     = azurerm_container_registry.acr.admin_password
+    key_vault_url    = azurerm_key_vault.kv.vault_uri
   })
-
-  # Ruta y nombre del fichero que se creará.
   filename = "../ansible/hosts"
 }
 
-# También generamos el fichero con la clave privada.
+# Genera el fichero con la clave privada (protegida por .gitignore y permisos).
 resource "local_file" "ssh_private_key" {
-  content  = tls_private_key.ssh_key.private_key_pem
-  filename = "../ansible/private_key.pem"
-  # Permisos de fichero para Linux/macOS (equivalente a chmod 400).
+  content         = tls_private_key.ssh_key.private_key_pem
+  filename        = "../ansible/private_key.pem"
   file_permission = "0400"
 }
