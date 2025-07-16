@@ -1,13 +1,13 @@
-# ansible/playbook.yml
 ---
-- name: 1. Desplegar Servidor Web en la VM con Podman
-  hosts: vm
-  become: yes
+- name: 1. Preparar y subir la imagen al ACR
+  hosts: localhost # Se ejecuta en tu propia máquina (WSL)
 
-  # Cargamos las variables desde nuestros ficheros
-  vars_files:
-    - vars.yml
-    - secrets.yml 
+  roles:
+    - role: acr
+
+- name: 2. Desplegar Servidor Web en la VM con Podman
+  hosts: vm 
+  become: yes 
 
   roles:
     - role: vm
