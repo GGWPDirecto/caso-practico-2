@@ -8,9 +8,9 @@ resource "local_file" "ansible_inventory" {
     ssh_user         = var.ssh_user
     acr_login_server = azurerm_container_registry.acr.login_server
     acr_username     = azurerm_container_registry.acr.admin_username
-    key_vault_url    = azurerm_key_vault.kv.vault_uri
   })
-  filename = "../ansible/hosts"
+
+  filename = "../ansible/hosts.yml"
 }
 
 # Genera el fichero con la clave privada (protegida por .gitignore y permisos).
