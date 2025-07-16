@@ -1,0 +1,34 @@
+---
+# Tareas para configurar la máquina virtual en Azure
+
+- name: Actualizar la caché de paquetes del sistema
+  ansible.builtin.apt:
+    update_cache: yes
+
+- name: Instalar Podman en la VM
+  ansible.builtin.apt:
+    name: podman
+    state: present
+
+- name: Iniciar sesión en el ACR desde la VM
+  containers.podman.podman_login:
+    username: "{{ acr_username }}"
+    password: "{{ acr_password }}"
+    registry: "{{ acr_login_server }}"
+
+- name: Descargar la imagen de Nginx y ejecutarla como un servicio
+  containers.podman.podman_container:
+    name: nginx-webapp
+    image: "{{ nginx_image }}" # Usa la imagen que subimos al ACR
+    state: started
+    ports:
+      - "443:443" # Expone el puerto 443 de la VM al 443 del contenedor
+    generate_systemd: yes # Crea un servicio para que sea persistente
+    restart_policy: always # Reinicia el contenedor si la VM se reinicia
+
+- name: Habilitar y arrancar el servicio del contenedor
+  ansible.builtin.systemd:
+    name: container-nginx-webapp.service # El servicio creado por Podman
+    enabled: yes
+    state: started
+    daemon_reload: yes

@@ -1,0 +1,13 @@
+# ansible/playbook.yml
+---
+- name: 1. Desplegar Servidor Web en la VM con Podman
+  hosts: vm
+  become: yes
+
+  # Cargamos las variables desde nuestros ficheros
+  vars_files:
+    - vars.yml
+    - secrets.yml 
+
+  roles:
+    - role: vm
