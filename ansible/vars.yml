@@ -1,8 +1,0 @@
-# Obtenido de 'terraform output -raw acr_login_server'
-acr_login_server: "tu_servidor_acr.azurecr.io"
-
-# Obtenido de 'terraform output -raw acr_admin_username'
-acr_username: "tu_usuario_acr"
-
-# Nombre de la imagen que vamos a desplegar
-nginx_image: "{{ acr_login_server }}/webapp:casopractico2"
