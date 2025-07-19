@@ -1,0 +1,30 @@
+---
+- name: Instala Podman y ejecuta Nginx desde ACR
+  hosts: vm
+  become: true
+  vars:
+    nginx_image: "nginx-custom:latest"
+  tasks:
+    - name: Instalar Podman
+      ansible.builtin.package:
+        name: podman
+        state: present
+
+    - name: Login en ACR
+      containers.podman.podman_login:
+        registry: "{{ acr_login_server }}"
+        username: "{{ acr_username }}"
+        password: "{{ acr_password }}"
+
+    - name: Descargar imagen de Nginx personalizada
+      containers.podman.podman_image:
+        name: "{{ acr_login_server }}/{{ nginx_image }}"
+        state: present
+
+    - name: Ejecutar contenedor Nginx
+      containers.podman.podman_container:
+        name: nginx
+        image: "{{ acr_login_server }}/{{ nginx_image }}"
+        state: started
+        ports:
+          - "80:80"

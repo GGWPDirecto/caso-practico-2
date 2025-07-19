@@ -1,0 +1,4 @@
+# Variables globales obtenidas del inventario generado por Terraform
+acr_login_server: "{{ hostvars['acr']['inventory_hostname'] }}"
+acr_username: "{{ hostvars['acr']['acr_username'] }}"
+acr_password: "{{ hostvars['acr']['acr_password'] }}"

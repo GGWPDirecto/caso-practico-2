@@ -1,0 +1,4 @@
+# Variables globales para el playbook de Ansible
+acr_login_server: "${acr_login_server}"
+acr_username: "${acr_username}"
+acr_password: "${acr_password}"
