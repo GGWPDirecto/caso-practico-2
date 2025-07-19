@@ -1,5 +1,5 @@
 # Imagen personalizada de Nginx para el caso práctico
-FROM nginx
+FROM docker.io/library/nginx:alpine
 
 # Copia el contenido personalizado
 COPY content/index.html /usr/share/nginx/html/index.html
