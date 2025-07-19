@@ -8,9 +8,12 @@ resource "random_string" "random" {
 
 # Crea el Azure Container Registry (ACR) para almacenar imágenes de contenedor
 resource "azurerm_container_registry" "acr" {
-  name                = "acr${random_string.random.result}"
+  name                = "acrimagenescp2${random_string.random.result}"
   resource_group_name = azurerm_resource_group.rg.name
   location            = azurerm_resource_group.rg.location
   sku                 = "Basic" # Nivel de servicio
   admin_enabled       = true    # Habilita usuario admin para autenticación
+  tags = {
+    environment = "casopractico2"
+  }
 }

@@ -22,6 +22,10 @@ resource "azurerm_kubernetes_cluster" "aks" {
   identity {
     type = "SystemAssigned"                  # Identidad administrada
   }
+  role_based_access_control_enabled = true
+  tags = {
+    environment = "casopractico2"
+  }
 }
 
 # Asigna el rol 'AcrPull' a la identidad del clúster de AKS para acceder al ACR
