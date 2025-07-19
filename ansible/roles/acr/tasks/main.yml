@@ -14,20 +14,16 @@
     force_source: true
   delegate_to: localhost
 
-- name: Etiquetar imagen para ACR (v1)
-  community.docker.docker_image:
-    name: "{{ dockerhub_image }}"
-    tag: v1
-    repository: "{{ acr_login_server }}/{{ acr_image_name }}"
-    source: local
-    push: false
-    force_tag: true
+- name: Etiquetar manualmente la imagen como casopractico2
+  ansible.builtin.command: >
+    docker tag {{ dockerhub_image }} {{ acr_login_server }}/{{ acr_image_name }}:casopractico2
   delegate_to: localhost
+  ignore_errors: true
 
-- name: Subir imagen a ACR (v1)
+- name: Subir imagen a ACR (casopractico2)
   community.docker.docker_image:
     name: "{{ acr_login_server }}/{{ acr_image_name }}"
-    tag: v1
+    tag: casopractico2
     source: local
     push: true
   delegate_to: localhost
