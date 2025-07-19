@@ -1,3 +1,8 @@
+## Variable para el ID de suscripción de Azure
+variable "subscription_id" {
+  description = "Azure Subscription ID"
+  type        = string
+}
 # Define las variables de entrada para la configuración de Terraform.
 
 variable "location" {

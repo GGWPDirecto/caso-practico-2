@@ -15,4 +15,5 @@ terraform {
 
 provider "azurerm" {
   features {}
+  subscription_id = var.subscription_id # ID de suscripción de Azure (oculto en tfvars)
 }

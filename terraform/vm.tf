@@ -1,9 +1,5 @@
 
-# Genera un par de claves SSH (privada/pública) para acceso seguro a la VM
-resource "tls_private_key" "ssh_key" {
-  algorithm = "RSA"
-  rsa_bits  = 4096
-}
+
 
 # Crea la máquina virtual Linux donde se desplegará la aplicación con Podman
 resource "azurerm_linux_virtual_machine" "vm" {
@@ -12,7 +8,7 @@ resource "azurerm_linux_virtual_machine" "vm" {
   location            = azurerm_resource_group.rg.location
   size                = "Standard_B1s" # Tipo de instancia
   admin_username      = "azureuser"    # Usuario administrador
-  network_interface_ids = [azurerm_network_interface.nic.id] # NIC asociada
+  network_interface_ids = [azurerm_network_interface.nic_vm.id] # NIC asociada
 
   # Configuración de la clave SSH usando la clave pública generada
   admin_ssh_key {

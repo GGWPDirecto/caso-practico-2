@@ -1,3 +1,5 @@
+# Sensitive variable files
+terraform.tfvars
 # Ficheros de estado y planes de Terraform
 *.tfstate
 *.tfstate.*
