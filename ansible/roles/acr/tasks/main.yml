@@ -10,6 +10,7 @@
   community.docker.docker_image:
     name: "{{ dockerhub_image }}"
     source: pull
+    force_source: true
 
 - name: Etiquetar imagen para ACR
   community.docker.docker_image:
@@ -18,6 +19,7 @@
     repository: "{{ acr_login_server }}/{{ acr_image_name }}"
     source: local
     push: false
+    force_tag: true
 
 - name: Subir imagen a ACR
   community.docker.docker_image:
