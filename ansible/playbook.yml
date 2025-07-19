@@ -5,8 +5,29 @@
   vars:
     nginx_image: "nginx-custom:latest"
   tasks:
+
+    - name: Instalar dependencias para repositorio Podman
+      apt:
+        name:
+          - software-properties-common
+          - uidmap
+        state: present
+        update_cache: yes
+
+    - name: Añadir repositorio oficial de Podman
+      ansible.builtin.shell: |
+        . /etc/os-release
+        echo "deb https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/x${ID}_${VERSION_ID}/ /" | tee /etc/apt/sources.list.d/devel:kubic:libcontainers:stable.list
+        curl -L https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/x${ID}_${VERSION_ID}/Release.key | apt-key add -
+      args:
+        warn: false
+
+    - name: Actualizar caché de paquetes
+      apt:
+        update_cache: yes
+
     - name: Instalar Podman
-      ansible.builtin.package:
+      apt:
         name: podman
         state: present
 
