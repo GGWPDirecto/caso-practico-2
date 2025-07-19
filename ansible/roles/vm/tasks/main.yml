@@ -1,5 +1,13 @@
 ---
 # Tareas para el rol de VM (Podman)
+
+- name: Crear directorio /srv/webdata si no existe
+  ansible.builtin.file:
+    path: /srv/webdata
+    state: directory
+    owner: root
+    group: root
+    mode: '0755'
 - name: Instalar Podman
   ansible.builtin.apt:
     name: podman
