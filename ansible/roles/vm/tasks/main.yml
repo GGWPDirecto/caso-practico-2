@@ -32,6 +32,6 @@
     image: "{{ acr_login_server }}/{{ acr_image_name }}:casopractico2"
     state: started
     ports:
-      - "80:80"
+      - "443:80"
     volume:
       - /srv/webdata:/usr/share/nginx/html
