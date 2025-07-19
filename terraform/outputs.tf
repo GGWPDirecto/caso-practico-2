@@ -21,3 +21,14 @@ output "aks_kube_config" {
   value       = azurerm_kubernetes_cluster.aks.kube_config_raw
   sensitive   = true
 }
+
+output "acr_admin_username" {
+  description = "Usuario admin del ACR."
+  value       = azurerm_container_registry.acr.admin_username
+}
+
+output "acr_admin_password" {
+  description = "Password admin del ACR."
+  value       = azurerm_container_registry.acr.admin_password
+  sensitive   = true
+}
