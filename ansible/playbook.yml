@@ -40,21 +40,26 @@
         name: podman
         state: present
 
-    - name: Login en ACR
-      containers.podman.podman_login:
-        registry: "{{ acr_login_server }}"
-        username: "{{ acr_username }}"
-        password: "{{ acr_password }}"
 
-    - name: Descargar imagen de Nginx personalizada
-      containers.podman.podman_image:
-        name: "{{ acr_login_server }}/{{ nginx_image }}"
-        state: present
+- name: Subida de imágenes a ACR
+  hosts: localhost
+  vars_files:
+    - vault.yml
+  roles:
+    - acr
 
-    - name: Ejecutar contenedor Nginx
-      containers.podman.podman_container:
-        name: nginx
-        image: "{{ acr_login_server }}/{{ nginx_image }}"
-        state: started
-        ports:
-          - "80:80"
+- name: Despliegue en VM con Podman
+  hosts: vm
+  become: true
+  vars_files:
+    - vault.yml
+  roles:
+    - vm
+
+# Descomenta para usar el rol de AKS
+#- name: Despliegue en AKS
+#  hosts: localhost
+#  vars_files:
+#    - vault.yml
+#  roles:
+#    - aks

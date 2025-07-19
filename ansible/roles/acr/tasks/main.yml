@@ -1,0 +1,25 @@
+---
+# Tareas para el rol de ACR
+- name: Login en ACR
+  azure.azcollection.azure_rm_acrlogin:
+    registry_name: "{{ acr_name }}"
+    username: "{{ acr_username }}"
+    password: "{{ acr_password }}"
+
+- name: Descargar imagen desde DockerHub
+  community.docker.docker_image:
+    name: "{{ dockerhub_image }}"
+    source: pull
+
+- name: Etiquetar imagen para ACR
+  community.docker.docker_image:
+    name: "{{ dockerhub_image }}"
+    tag: "{{ acr_image_tag }}"
+    repository: "{{ acr_login_server }}/{{ acr_image_name }}"
+    push: false
+
+- name: Subir imagen a ACR
+  community.docker.docker_image:
+    name: "{{ acr_login_server }}/{{ acr_image_name }}"
+    tag: "{{ acr_image_tag }}"
+    push: true

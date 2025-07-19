@@ -1,0 +1,29 @@
+---
+# Tareas para el rol de AKS
+- name: Crear namespace
+  kubernetes.core.k8s:
+    state: present
+    definition:
+      apiVersion: v1
+      kind: Namespace
+      metadata:
+        name: "{{ app_namespace }}"
+
+- name: Crear secreto para ACR
+  kubernetes.core.k8s:
+    state: present
+    definition:
+      apiVersion: v1
+      kind: Secret
+      metadata:
+        name: acr-secret
+        namespace: "{{ app_namespace }}"
+      type: kubernetes.io/dockerconfigjson
+      data:
+        .dockerconfigjson: "{{ acr_dockerconfigjson | b64encode }}"
+
+- name: Desplegar aplicación
+  kubernetes.core.k8s:
+    state: present
+    definition: "{{ lookup('template', 'app_template.yml.j2') }}"
+    namespace: "{{ app_namespace }}"

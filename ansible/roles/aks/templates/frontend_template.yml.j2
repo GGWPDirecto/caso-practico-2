@@ -1,0 +1,53 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ app.frontend.name }}
+  namespace: {{ app_namespace }}
+spec:
+  replicas: {{ app.frontend.replicas }}
+  selector:
+    matchLabels:
+      app: {{ app.frontend.name }}
+  template:
+    metadata:
+      labels:
+        app: {{ app.frontend.name }}
+    spec:
+      containers:
+        - name: {{ app.frontend.name }}
+          image: {{ app.frontend.image }}
+          ports:
+            - containerPort: {{ app.frontend.port }}
+          volumeMounts:
+            - name: {{ app.frontend.pv }}
+              mountPath: /usr/share/nginx/html
+      volumes:
+        - name: {{ app.frontend.pv }}
+          persistentVolumeClaim:
+            claimName: {{ app.frontend.pv }}
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ app.frontend.pv }}
+  namespace: {{ app_namespace }}
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ app.frontend.name }}
+  namespace: {{ app_namespace }}
+spec:
+  type: LoadBalancer
+  selector:
+    app: {{ app.frontend.name }}
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: {{ app.frontend.port }}

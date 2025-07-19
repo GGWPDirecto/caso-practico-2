@@ -1,0 +1,29 @@
+---
+# Tareas para el rol de VM (Podman)
+- name: Instalar Podman
+  ansible.builtin.apt:
+    name: podman
+    state: present
+    update_cache: yes
+  become: true
+
+- name: Login en ACR
+  containers.podman.podman_login:
+    registry: "{{ acr_login_server }}"
+    username: "{{ acr_username }}"
+    password: "{{ acr_password }}"
+
+- name: Descargar imagen desde ACR
+  containers.podman.podman_image:
+    name: "{{ acr_login_server }}/{{ acr_image_name }}:{{ acr_image_tag }}"
+    state: present
+
+- name: Ejecutar contenedor
+  containers.podman.podman_container:
+    name: web
+    image: "{{ acr_login_server }}/{{ acr_image_name }}:{{ acr_image_tag }}"
+    state: started
+    ports:
+      - "80:80"
+    volume:
+      - /srv/webdata:/usr/share/nginx/html
