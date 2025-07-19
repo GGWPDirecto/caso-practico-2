@@ -14,13 +14,18 @@
         state: present
         update_cache: yes
 
+
+
     - name: Añadir repositorio oficial de Podman
-      ansible.builtin.shell: |
-        . /etc/os-release
-        echo "deb https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/x${ID}_${VERSION_ID}/ /" | tee /etc/apt/sources.list.d/devel:kubic:libcontainers:stable.list
-        curl -L https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/x${ID}_${VERSION_ID}/Release.key | apt-key add -
-      args:
-        warn: false
+      apt_repository:
+        repo: "deb https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/xUbuntu_{{ ansible_distribution_version }}/ /"
+        state: present
+        filename: "devel:kubic:libcontainers:stable"
+
+    - name: Importar clave GPG del repositorio Podman
+      apt_key:
+        url: "https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/xUbuntu_{{ ansible_distribution_version }}/Release.key"
+        state: present
 
     - name: Actualizar caché de paquetes
       apt:
