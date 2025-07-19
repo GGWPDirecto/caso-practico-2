@@ -1,25 +1,6 @@
-data "azurerm_client_config" "current" {}
 
 resource "azurerm_key_vault" "kv" {
-  name                        = "kvpractico2${random_integer.suffix.result}"
-  location                    = azurerm_resource_group.rg.location
-  resource_group_name         = azurerm_resource_group.rg.name
-  tenant_id                   = data.azurerm_client_config.current.tenant_id
-  sku_name                    = "standard"
-  # soft_delete_enabled eliminado, ya no es necesario en versiones recientes
-  purge_protection_enabled    = false
-}
-
-resource "azurerm_key_vault_secret" "acr_password" {
-  name         = "acr-password"
-  value        = azurerm_container_registry.acr.admin_password
-  key_vault_id = azurerm_key_vault.kv.id
-}
-# terraform/key_vault.tf
-
-# Define el recurso de Azure Key Vault.
-resource "azurerm_key_vault" "kv" {
-  name                = "kv${random_string.random.result}" # Nombre único
+  name                = "kv${random_string.random.result}"
   location            = azurerm_resource_group.rg.location
   resource_group_name = azurerm_resource_group.rg.name
   tenant_id           = data.azurerm_client_config.current.tenant_id
@@ -35,12 +16,14 @@ resource "azurerm_key_vault" "kv" {
   }
 }
 
-# Recurso para obtener la información del usuario/sesión actual.
+# Obtiene la configuración del cliente autenticado actual (usado para access_policy)
 data "azurerm_client_config" "current" {}
 
-# Define el secreto que se guardará en el Key Vault.
-resource "azurerm_key_vault_secret" "acr_password_secret" {
-  name         = "acr-admin-password" # Nombre del secreto dentro del vault
+
+
+# Guarda la contraseña de administrador del ACR como un secreto en el Key Vault
+resource "azurerm_key_vault_secret" "acr_password" {
+  name         = "acr-password"
   value        = azurerm_container_registry.acr.admin_password
   key_vault_id = azurerm_key_vault.kv.id
 }
