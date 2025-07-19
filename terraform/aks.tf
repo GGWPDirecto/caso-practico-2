@@ -1,6 +1,11 @@
 
 # Crea el clúster de Azure Kubernetes Service (AKS)
 resource "azurerm_kubernetes_cluster" "aks" {
+  network_profile {
+    network_plugin     = "azure"
+    service_cidr       = "10.1.0.0/16"   # No debe solaparse con la VNet principal
+    dns_service_ip     = "10.1.0.10"
+  }
   name                = "aks-casopractico2" # Nombre del clúster
   location            = azurerm_resource_group.rg.location
   resource_group_name = azurerm_resource_group.rg.name
@@ -10,7 +15,7 @@ resource "azurerm_kubernetes_cluster" "aks" {
   default_node_pool {
     name           = "default"               # Nombre del pool
     node_count     = 1                       # Número de nodos
-    vm_size        = "Standard_DS2_v2"       # Tamaño de VM
+    vm_size        = "Standard_D2s_v3"       # Tamaño de VM permitido en Spain Central
     vnet_subnet_id = azurerm_subnet.subnet_aks.id # Subred para AKS
   }
 
