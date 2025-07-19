@@ -5,12 +5,14 @@
     registry_url: "{{ acr_login_server }}"
     username: "{{ acr_username }}"
     password: "{{ acr_password }}"
+  delegate_to: localhost
 
 - name: Descargar imagen desde DockerHub
   community.docker.docker_image:
     name: "{{ dockerhub_image }}"
     source: pull
     force_source: true
+  delegate_to: localhost
 
 - name: Etiquetar imagen para ACR
   community.docker.docker_image:
@@ -20,6 +22,7 @@
     source: local
     push: false
     force_tag: true
+  delegate_to: localhost
 
 - name: Subir imagen a ACR
   community.docker.docker_image:
@@ -27,3 +30,4 @@
     tag: "{{ acr_image_tag }}"
     source: local
     push: true
+  delegate_to: localhost
