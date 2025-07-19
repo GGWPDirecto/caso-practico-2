@@ -15,13 +15,13 @@
 
 - name: Descargar imagen desde ACR
   containers.podman.podman_image:
-    name: "{{ acr_login_server }}/{{ acr_image_name }}:{{ acr_image_tag }}"
+    name: "{{ acr_login_server }}/{{ acr_image_name }}:casopractico2"
     state: present
 
 - name: Ejecutar contenedor
   containers.podman.podman_container:
     name: web
-    image: "{{ acr_login_server }}/{{ acr_image_name }}:{{ acr_image_tag }}"
+    image: "{{ acr_login_server }}/{{ acr_image_name }}:casopractico2"
     state: started
     ports:
       - "80:80"
