@@ -1,3 +1,15 @@
+resource "random_integer" "suffix" {
+  min = 10000
+  max = 99999
+}
+
+resource "azurerm_container_registry" "acr" {
+  name                = "acrpractico2${random_integer.suffix.result}"
+  resource_group_name = azurerm_resource_group.rg.name
+  location            = azurerm_resource_group.rg.location
+  sku                 = "Basic"
+  admin_enabled       = true
+}
 # Azure Container Registry (ACR) para almacenar las imágenes de contenedor.
 resource "azurerm_container_registry" "acr" {
   name                = "acr${random_string.random.result}"
