@@ -1,5 +1,4 @@
 [vm]
-158.158.40.73 ansible_user=azureuser ansible_ssh_private_key_file=/mnt/c/Users/Carlo/.ssh/id_rsa
-
+158.158.40.73 ansible_user=azureuser ansible_ssh_private_key_file=/home/user/.ssh/id_rsa
 [acr]
 acrimagenescp2e3uprdfi.azurecr.io acr_username=acrimagenescp2e3uprdfi 
