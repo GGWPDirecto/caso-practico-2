@@ -1,3 +1,9 @@
+# Desplegar el frontend (nginx-custom) usando su template específico
+- name: Desplegar frontend
+  kubernetes.core.k8s:
+    state: present
+    definition: "{{ lookup('template', 'frontend_template.yml.j2') }}"
+    namespace: "{{ app_namespace }}"
 
 - name: Generar dockerconfigjson para ACR
   set_fact:
@@ -37,8 +43,9 @@
       data:
         .dockerconfigjson: "{{ acr_dockerconfigjson | b64encode }}"
 
-- name: Desplegar aplicación
+- name: Desplegar servicios principales (vote, result, worker, redis, postgres)
   kubernetes.core.k8s:
     state: present
-    definition: "{{ lookup('template', 'app_template.yml.j2') }}"
+    definition: "{{ lookup('template', 'app_template.yml.j2', item=svc) }}"
     namespace: "{{ app_namespace }}"
+  loop: "{{ app | dict2items | selectattr('key', 'ne', 'frontend') | map(attribute='value') | list }}"
