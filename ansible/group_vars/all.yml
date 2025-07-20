@@ -11,11 +11,11 @@ acr_images:
   - name: nginx-custom
     source_image: nginx:latest
   - name: voting-app-vote
-    source_image: dockersamples/example-voting-app-vote:latest
+    source_image: example-voting-app_vote:latest
   - name: voting-app-result
-    source_image: dockersamples/example-voting-app-result:latest
+    source_image: example-voting-app_result:latest
   - name: voting-app-worker
-    source_image: dockersamples/example-voting-app-worker:latest
+    source_image: example-voting-app_worker:latest
   - name: redis
     source_image: redis:alpine
   - name: postgres-db
