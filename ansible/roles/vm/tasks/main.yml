@@ -8,6 +8,7 @@
     owner: root
     group: root
     mode: '0755'
+
 - name: Instalar Podman
   ansible.builtin.apt:
     name: podman
@@ -21,15 +22,15 @@
     username: "{{ acr_username }}"
     password: "{{ acr_password }}"
 
-- name: Descargar imagen desde ACR
+- name: Descargar imagen seleccionada desde ACR
   containers.podman.podman_image:
-    name: "{{ acr_login_server }}/{{ acr_image_name }}:casopractico2"
+    name: "{{ acr_login_server }}/{{ acr_image_name }}:{{ acr_image_tag }}"
     state: present
 
-- name: Ejecutar contenedor
+- name: Ejecutar contenedor con la imagen seleccionada
   containers.podman.podman_container:
     name: web
-    image: "{{ acr_login_server }}/{{ acr_image_name }}:casopractico2"
+    image: "{{ acr_login_server }}/{{ acr_image_name }}:{{ acr_image_tag }}"
     state: started
     ports:
       - "443:80"

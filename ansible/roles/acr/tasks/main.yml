@@ -7,23 +7,26 @@
     password: "{{ acr_password }}"
   delegate_to: localhost
 
-- name: Descargar imagen desde DockerHub
-  community.docker.docker_image:
-    name: "{{ dockerhub_image }}"
-    source: pull
-    force_source: true
-  delegate_to: localhost
+- name: Gestionar imágenes (pull, tag, push) en bucle
+  block:
+    - name: Descargar imagen desde DockerHub
+      community.docker.docker_image:
+        name: "{{ item.source_image }}"
+        source: pull
+        force_source: true
+      delegate_to: localhost
 
-- name: Etiquetar manualmente la imagen como casopractico2
-  ansible.builtin.command: >
-    docker tag {{ dockerhub_image }} {{ acr_login_server }}/{{ acr_image_name }}:casopractico2
-  delegate_to: localhost
-  ignore_errors: true
+    - name: Etiquetar imagen para ACR
+      ansible.builtin.command: >
+        docker tag {{ item.source_image }} {{ acr_login_server }}/{{ item.name }}:{{ acr_image_tag }}
+      delegate_to: localhost
+      ignore_errors: true
 
-- name: Subir imagen a ACR (casopractico2)
-  community.docker.docker_image:
-    name: "{{ acr_login_server }}/{{ acr_image_name }}"
-    tag: casopractico2
-    source: local
-    push: true
-  delegate_to: localhost
+    - name: Subir imagen a ACR
+      community.docker.docker_image:
+        name: "{{ acr_login_server }}/{{ item.name }}"
+        tag: "{{ acr_image_tag }}"
+        source: local
+        push: true
+      delegate_to: localhost
+  loop: "{{ acr_images }}"

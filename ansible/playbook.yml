@@ -1,14 +1,12 @@
----
 
-- name: Instala Podman y ejecuta Nginx desde ACR
+
+
+- name: Instala Podman en VM
   hosts: vm
   become: true
-  vars:
-    nginx_image: "nginx-custom:latest"
   vars_files:
     - vault.yml
   tasks:
-
     - name: Instalar dependencias para repositorio Podman
       apt:
         name:
@@ -16,8 +14,6 @@
           - uidmap
         state: present
         update_cache: yes
-
-
 
     - name: Añadir repositorio oficial de Podman
       apt_repository:
@@ -40,7 +36,6 @@
         name: podman
         state: present
 
-
 - name: Subida de imágenes a ACR
   hosts: localhost
   vars_files:
@@ -56,10 +51,11 @@
   roles:
     - vm
 
-# Descomenta para usar el rol de AKS
-#- name: Despliegue en AKS
-#  hosts: localhost
-#  vars_files:
-#    - vault.yml
-#  roles:
-#    - aks
+- name: Despliegue en AKS
+  hosts: localhost
+  vars_files:
+    - vault.yml
+  roles:
+    - aks
+
+

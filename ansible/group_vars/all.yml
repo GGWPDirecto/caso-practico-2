@@ -2,3 +2,21 @@
 acr_login_server: "{{ hostvars['acr']['inventory_hostname'] }}"
 acr_username: "{{ hostvars['acr']['acr_username'] }}"
 acr_password: "{{ hostvars['acr']['acr_password'] }}"
+
+# Tag unificado para todas las imágenes en este proyecto
+acr_image_tag: casopractico2
+
+# Lista de imágenes a descargar de DockerHub y subir a ACR
+acr_images:
+  - name: nginx-custom
+    source_image: nginx:latest
+  - name: voting-app-vote
+    source_image: dockersamples/example-voting-app-vote:latest
+  - name: voting-app-result
+    source_image: dockersamples/example-voting-app-result:latest
+  - name: voting-app-worker
+    source_image: dockersamples/example-voting-app-worker:latest
+  - name: redis
+    source_image: redis:alpine
+  - name: postgres-db
+    source_image: postgres:9.4

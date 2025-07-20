@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: {{ app.backend.name }}
-          image: {{ app.backend.image }}
+          image: {{ acr_login_server }}/{{ app.backend.name }}:{{ acr_image_tag }}
           ports:
             - containerPort: {{ app.backend.port }}
           volumeMounts:
