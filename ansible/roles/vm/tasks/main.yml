@@ -1,3 +1,11 @@
+- name: Copiar index.html personalizado a la VM
+  ansible.builtin.copy:
+    src: ../../../../applications/nginx-podman/content/index.html
+    dest: /srv/webdata/index.html
+    owner: root
+    group: root
+    mode: '0644'
+  become: true
 ---
 # Tareas para el rol de VM (Podman)
 
