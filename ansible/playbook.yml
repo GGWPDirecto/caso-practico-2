@@ -4,7 +4,7 @@
   gather_facts: false
   tasks:
     - name: Descargar kubeconfig con az cli
-      ansible.builtin.shell: |
+      ansible.buil:tin.shell: |
         az aks get-credentials --resource-group rg-casopractico2 --name aks-casopractico2 --overwrite-existing
       environment:
         AZURE_CONFIG_DIR: ~/.azure

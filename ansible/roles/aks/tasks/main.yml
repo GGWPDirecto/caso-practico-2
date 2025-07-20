@@ -12,7 +12,6 @@
         }
       }
 
----
 # Tareas para el rol de AKS
 - name: Crear namespace
   kubernetes.core.k8s:
