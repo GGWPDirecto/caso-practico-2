@@ -15,11 +15,3 @@ acr_images:
     source_image: nginx:latest
   - name: voting-app-vote
     source_image: example-voting-app_vote:latest
-  - name: voting-app-result
-    source_image: example-voting-app_result:latest
-  - name: voting-app-worker
-    source_image: example-voting-app_worker:latest
-  - name: redis
-    source_image: redis:alpine
-  - name: postgres-db
-    source_image: postgres:9.4

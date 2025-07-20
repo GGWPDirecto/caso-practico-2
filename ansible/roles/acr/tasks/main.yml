@@ -16,7 +16,7 @@
     force_source: true
   delegate_to: localhost
   loop: "{{ acr_images }}"
-  when: item.source_image is search('nginx:latest|redis:alpine|postgres:9.4')
+  when: item.source_image is search('nginx:latest')
 
 - name: Etiquetar imagen para ACR
   ansible.builtin.command: >
