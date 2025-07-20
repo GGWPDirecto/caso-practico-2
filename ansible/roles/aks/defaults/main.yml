@@ -7,15 +7,32 @@ acr_dockerconfigjson: ""
 
 # Ejemplo de estructura para la app
 app:
-  backend:
-    name: backend
-    image: acrimagenescp2e3uprdfi.azurecr.io/voting-app-backend:v1
+  vote:
+    name: voting-app-vote
+    replicas: 1
+    port: 80
+    pv: vote-data
+  result:
+    name: voting-app-result
+    replicas: 1
+    port: 80
+    pv: result-data
+  worker:
+    name: voting-app-worker
+    replicas: 1
+    port: 80
+  redis:
+    name: redis
     replicas: 1
     port: 6379
     pv: redis-data
+  postgres:
+    name: postgres-db
+    replicas: 1
+    port: 5432
+    pv: postgres-data
   frontend:
-    name: frontend
-    image: acrimagenescp2e3uprdfi.azurecr.io/voting-app-frontend:v1
+    name: nginx-custom
     replicas: 1
     port: 80
     pv: frontend-data

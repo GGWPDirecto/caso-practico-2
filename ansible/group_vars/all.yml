@@ -6,6 +6,9 @@ acr_password: "{{ hostvars['acr']['acr_password'] }}"
 # Tag unificado para todas las imágenes en este proyecto
 acr_image_tag: casopractico2
 
+# Imagen por defecto para la VM (Nginx personalizado)
+acr_image_name: nginx-custom
+
 # Lista de imágenes a descargar de DockerHub y subir a ACR
 acr_images:
   - name: nginx-custom
