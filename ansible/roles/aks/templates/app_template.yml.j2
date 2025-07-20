@@ -1,35 +1,35 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ app.backend.name }}
+  name: {{ app.vote.name }}
   namespace: {{ app_namespace }}
 spec:
-  replicas: {{ app.backend.replicas }}
+  replicas: {{ app.vote.replicas }}
   selector:
     matchLabels:
-      app: {{ app.backend.name }}
+      app: {{ app.vote.name }}
   template:
     metadata:
       labels:
-        app: {{ app.backend.name }}
+        app: {{ app.vote.name }}
     spec:
       containers:
-        - name: {{ app.backend.name }}
-          image: {{ acr_login_server }}/{{ app.backend.name }}:{{ acr_image_tag }}
+        - name: {{ app.vote.name }}
+          image: {{ acr_login_server }}/{{ app.vote.name }}:{{ acr_image_tag }}
           ports:
-            - containerPort: {{ app.backend.port }}
+            - containerPort: {{ app.vote.port }}
           volumeMounts:
-            - name: {{ app.backend.pv }}
+            - name: {{ app.vote.pv }}
               mountPath: /data
       volumes:
-        - name: {{ app.backend.pv }}
+        - name: {{ app.vote.pv }}
           persistentVolumeClaim:
-            claimName: {{ app.backend.pv }}
+            claimName: {{ app.vote.pv }}
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: {{ app.backend.pv }}
+  name: {{ app.vote.pv }}
   namespace: {{ app_namespace }}
 spec:
   accessModes:
@@ -41,12 +41,12 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ app.backend.name }}
+  name: {{ app.vote.name }}
   namespace: {{ app_namespace }}
 spec:
   selector:
-    app: {{ app.backend.name }}
+    app: {{ app.vote.name }}
   ports:
     - protocol: TCP
-      port: {{ app.backend.port }}
-      targetPort: {{ app.backend.port }}
+      port: {{ app.vote.port }}
+      targetPort: {{ app.vote.port }}
