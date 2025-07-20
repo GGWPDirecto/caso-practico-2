@@ -1,3 +1,6 @@
+# Variables para AKS
+aks_resource_group: rg-casopractico2
+aks_cluster_name: aks-casopractico2
 # Variables globales obtenidas del inventario generado por Terraform
 acr_login_server: "{{ hostvars['acr']['inventory_hostname'] }}"
 acr_username: "{{ hostvars['acr']['acr_username'] }}"
