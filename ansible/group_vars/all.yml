@@ -1,7 +1,8 @@
 # Variables globales obtenidas del inventario generado por Terraform
 acr_login_server: "{{ hostvars['acr']['inventory_hostname'] }}"
 acr_username: "{{ hostvars['acr']['acr_username'] }}"
-acr_password: "{{ hostvars['acr']['acr_password'] }}"
+# La contraseña ahora se obtiene desde Key Vault en el playbook principal
+# acr_password: "{{ hostvars['acr']['acr_password'] }}"
 
 # Tag unificado para todas las imágenes en este proyecto
 acr_image_tag: casopractico2

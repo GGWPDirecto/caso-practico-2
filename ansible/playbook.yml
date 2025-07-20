@@ -1,8 +1,17 @@
-
-- name: Obtener kubeconfig de AKS con Azure CLI
+---
+- name: Configuración y Despliegue General
   hosts: localhost
   gather_facts: false
-  tasks:
+  vars:
+    key_vault_name: "kve3uprdfi" # Reemplaza con el nombre de tu Key Vault si es diferente
+    acr_password_secret_name: "acr-password"
+
+  pre_tasks:
+    - name: Obtener contraseña de ACR desde Azure Key Vault
+      ansible.builtin.set_fact:
+        acr_password: "{{ lookup('community.general.azure.key_vault_secret', secret=acr_password_secret_name, vault_url='https://' + key_vault_name + '.vault.azure.net/') }}"
+      delegate_to: localhost
+
     - name: Descargar kubeconfig con az cli
       ansible.builtin.shell: |
         az aks get-credentials --resource-group rg-casopractico2 --name aks-casopractico2 --overwrite-existing
@@ -10,43 +19,7 @@
         AZURE_CONFIG_DIR: ~/.azure
       register: kubeconfig_result
       changed_when: false
-
-
-
-- name: Instala Podman en VM
-  hosts: vm
-  become: true
-  vars_files:
-    - vault.yml
-  tasks:
-    - name: Instalar dependencias para repositorio Podman
-      apt:
-        name:
-          - software-properties-common
-          - uidmap
-        state: present
-        update_cache: yes
-
-    - name: Añadir repositorio oficial de Podman
-      apt_repository:
-        repo: "deb https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/xUbuntu_{{ ansible_distribution_version }}/ /"
-        state: present
-        filename: "devel:kubic:libcontainers:stable"
-        update_cache: no
-
-    - name: Importar clave GPG del repositorio Podman
-      apt_key:
-        url: "https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/xUbuntu_{{ ansible_distribution_version }}/Release.key"
-        state: present
-
-    - name: Actualizar caché de paquetes
-      apt:
-        update_cache: yes
-
-    - name: Instalar Podman
-      apt:
-        name: podman
-        state: present
+      delegate_to: localhost
 
 - name: Subida de imágenes a ACR
   hosts: localhost
