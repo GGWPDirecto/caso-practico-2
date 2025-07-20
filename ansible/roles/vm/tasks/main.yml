@@ -1,22 +1,4 @@
-# Copiar index.html personalizado a la VM
-- name: Copiar index.html personalizado
-  ansible.builtin.copy:
-    src: ../../../../applications/nginx-podman/content/index.html
-    dest: /srv/webdata/index.html
-    owner: root
-    group: root
-    mode: '0644'
-  become: true
 
-# Asegurar permisos correctos en /srv/webdata
-- name: Asegurar permisos correctos en /srv/webdata
-  ansible.builtin.file:
-    path: /srv/webdata
-    state: directory
-    owner: root
-    group: root
-    mode: '0755'
-  become: true
 # Tareas para el rol de VM (Podman)
 
 - name: Crear directorio /srv/webdata si no existe
@@ -27,6 +9,15 @@
     group: root
     mode: '0755'
 
+- name: Copiar index.html personalizado
+  ansible.builtin.copy:
+    src: ../../../../applications/nginx-podman/content/index.html
+    dest: /srv/webdata/index.html
+    owner: root
+    group: root
+    mode: '0644'
+  become: true
+
 - name: Instalar Podman
   ansible.builtin.apt:
     name: podman
@@ -34,21 +25,10 @@
     update_cache: yes
   become: true
 
-- name: Login en ACR
-  containers.podman.podman_login:
-    registry: "{{ acr_login_server }}"
-    username: "{{ acr_username }}"
-    password: "{{ acr_password }}"
-
-- name: Descargar imagen seleccionada desde ACR
-  containers.podman.podman_image:
-    name: "{{ acr_login_server }}/{{ acr_image_name }}:{{ acr_image_tag }}"
-    state: present
-
-- name: Ejecutar contenedor con la imagen seleccionada
+- name: Ejecutar contenedor Nginx público
   containers.podman.podman_container:
     name: web
-    image: "{{ acr_login_server }}/{{ acr_image_name }}:{{ acr_image_tag }}"
+    image: "{{ acr_login_server }}/nginx-custom:{{ acr_image_tag }}"
     state: started
     ports:
       - "443:80"
