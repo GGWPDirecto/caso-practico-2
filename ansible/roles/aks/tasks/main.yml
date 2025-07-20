@@ -1,12 +1,7 @@
-# Desplegar el frontend (nginx-custom) usando su template específico
-- name: Desplegar frontend
-  kubernetes.core.k8s:
-    state: present
-    definition: "{{ lookup('template', 'frontend_template.yml.j2') }}"
-    namespace: "{{ app_namespace }}"
+# Tareas para el rol de AKS
 
 - name: Generar dockerconfigjson para ACR
-  set_fact:
+  ansible.builtin.set_fact:
     acr_dockerconfigjson: >-
       {{
         {
@@ -20,8 +15,7 @@
         } | to_json
       }}
 
-# Tareas para el rol de AKS
-- name: Crear namespace
+- name: Crear namespace para la aplicación
   kubernetes.core.k8s:
     state: present
     definition:
@@ -30,7 +24,7 @@
       metadata:
         name: "{{ app_namespace }}"
 
-- name: Crear secreto para ACR
+- name: Crear secreto para autenticación con ACR
   kubernetes.core.k8s:
     state: present
     definition:
@@ -43,6 +37,18 @@
       data:
         .dockerconfigjson: "{{ acr_dockerconfigjson | b64encode }}"
 
+- name: Crear ConfigMap para el index.html del frontend
+  kubernetes.core.k8s:
+    state: present
+    definition:
+      apiVersion: v1
+      kind: ConfigMap
+      metadata:
+        name: nginx-index-html
+        namespace: "{{ app_namespace }}"
+      data:
+        index.html: "{{ lookup('file', '../../../../applications/nginx-podman/content/index.html') }}"
+
 - name: Desplegar servicios principales (vote)
   kubernetes.core.k8s:
     state: present
@@ -50,3 +56,10 @@
     namespace: "{{ app_namespace }}"
   vars:
     item: "{{ app.vote }}"
+
+- name: Desplegar el frontend (nginx-custom)
+  kubernetes.core.k8s:
+    state: present
+    definition: "{{ lookup('template', 'frontend_template.yml.j2') }}"
+    namespace: "{{ app_namespace }}"
+

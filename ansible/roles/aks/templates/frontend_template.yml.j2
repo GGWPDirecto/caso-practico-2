@@ -1,3 +1,4 @@
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -15,28 +16,18 @@ spec:
     spec:
       containers:
         - name: {{ app.frontend.name }}
-          image: {{ acr_login_server }}/{{ app.frontend.name }}:{{ acr_image_tag }}
+          image: "{{ acr_login_server }}/{{ app.frontend.name }}:{{ acr_image_tag }}"
           ports:
             - containerPort: {{ app.frontend.port }}
           volumeMounts:
-            - name: {{ app.frontend.pv }}
+            - name: nginx-index-volume
               mountPath: /usr/share/nginx/html
       volumes:
-        - name: {{ app.frontend.pv }}
-          persistentVolumeClaim:
-            claimName: {{ app.frontend.pv }}
----
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: {{ app.frontend.pv }}
-  namespace: {{ app_namespace }}
-spec:
-  accessModes:
-    - ReadWriteOnce
-  resources:
-    requests:
-      storage: 1Gi
+        - name: nginx-index-volume
+          configMap:
+            name: nginx-index-html
+      imagePullSecrets:
+        - name: acr-secret
 ---
 apiVersion: v1
 kind: Service

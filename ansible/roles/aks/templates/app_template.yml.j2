@@ -1,3 +1,4 @@
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -15,22 +16,18 @@ spec:
     spec:
       containers:
         - name: {{ item.name }}
-          image: {{ acr_login_server }}/{{ item.name }}:{{ acr_image_tag }}
+          image: "{{ acr_login_server }}/{{ item.name }}:{{ acr_image_tag }}"
           ports:
             - containerPort: {{ item.port }}
-{% if item.pv is defined %}
           volumeMounts:
             - name: {{ item.pv }}
               mountPath: /data
-{% endif %}
-{% if item.pv is defined %}
       volumes:
         - name: {{ item.pv }}
           persistentVolumeClaim:
             claimName: {{ item.pv }}
-{% endif %}
----
-{% if item.pv is defined %}
+      imagePullSecrets:
+        - name: acr-secret
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
@@ -43,8 +40,6 @@ spec:
   resources:
     requests:
       storage: 1Gi
-{% endif %}
----
 ---
 apiVersion: v1
 kind: Service

@@ -16,13 +16,11 @@
     force_source: true
   delegate_to: localhost
   loop: "{{ acr_images }}"
-  when: item.source_image is search('nginx:latest')
 
 - name: Etiquetar imagen para ACR
   ansible.builtin.command: >
     docker tag {{ item.source_image }} {{ acr_login_server }}/{{ item.name }}:{{ acr_image_tag }}
   delegate_to: localhost
-  ignore_errors: true
   loop: "{{ acr_images }}"
 
 - name: Subir imagen a ACR
