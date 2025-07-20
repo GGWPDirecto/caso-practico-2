@@ -1,3 +1,13 @@
+- name: Obtener kubeconfig de AKS
+  hosts: localhost
+  gather_facts: false
+  tasks:
+    - name: Obtener kubeconfig de AKS y guardarlo en ~/.kube/config
+      azure.azcollection.azure_rm_aks_kubeconfig:
+        resource_group: "rg-casopractico2"
+        name: "aks-casopractico2"
+        path: "~/.kube/config"
+      delegate_to: localhost
 
 
 
