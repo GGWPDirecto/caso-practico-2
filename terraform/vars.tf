@@ -20,7 +20,7 @@ variable "ssh_user" {
 variable "ssh_key_path" {
   description = "The path to the SSH private key file."
   type        = string
-  default     = "/mnt/c/Users/Carlo/.ssh/id_rsa" # Ruta para WSL
+  default     = "/home/user/.ssh/id_rsa" # Ruta para Ansible/WSL
 }
 
 locals {
