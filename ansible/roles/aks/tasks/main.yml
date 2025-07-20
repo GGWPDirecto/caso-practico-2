@@ -37,6 +37,18 @@
       data:
         .dockerconfigjson: "{{ acr_dockerconfigjson | b64encode }}"
 
+- name: Desplegar Redis en el namespace de la app
+  kubernetes.core.k8s:
+    state: present
+    src: templates/redis.yml
+    namespace: voting-app
+
+- name: Desplegar base de datos PostgreSQL en el namespace de la app
+  kubernetes.core.k8s:
+    state: present
+    src: templates/db.yml
+    namespace: voting-app
+
 - name: Desplegar aplicación de voto (Deployment y Service)
   kubernetes.core.k8s:
     state: present
