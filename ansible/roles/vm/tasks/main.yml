@@ -47,6 +47,13 @@
     mode: '0644'
   become: true
 
+- name: Login en ACR desde la VM con Podman
+  containers.podman.podman_login:
+    registry: "{{ acr_login_server }}"
+    username: "{{ acr_username }}"
+    password: "{{ acr_password }}"
+  become: true
+
 - name: Ejecutar contenedor Nginx público
   containers.podman.podman_container:
     name: web
