@@ -12,8 +12,4 @@ app:
     replicas: 1
     port: 80
     pv: vote-data
-  frontend:
-    name: nginx-custom
-    replicas: 1
-    port: 80
-    pv: frontend-data
+

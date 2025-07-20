@@ -37,18 +37,6 @@
       data:
         .dockerconfigjson: "{{ acr_dockerconfigjson | b64encode }}"
 
-- name: Crear ConfigMap para el index.html del frontend
-  kubernetes.core.k8s:
-    state: present
-    definition:
-      apiVersion: v1
-      kind: ConfigMap
-      metadata:
-        name: nginx-index-html
-        namespace: "{{ app_namespace }}"
-      data:
-        index.html: "{{ lookup('file', '../../../../applications/nginx-podman/content/index.html') }}"
-
 - name: Desplegar servicios principales (vote)
   kubernetes.core.k8s:
     state: present
@@ -56,12 +44,6 @@
     namespace: "{{ app_namespace }}"
   vars:
     item: "{{ app.vote }}"
-
-- name: Desplegar el frontend (nginx-custom)
-  kubernetes.core.k8s:
-    state: present
-    definition: "{{ lookup('template', 'frontend_template.yml.j2') }}"
-    namespace: "{{ app_namespace }}"
 
 - name: Exponer la aplicación de voto con un LoadBalancer
   kubernetes.core.k8s:
