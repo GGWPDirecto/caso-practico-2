@@ -1,13 +1,15 @@
-- name: Obtener kubeconfig de AKS
+
+- name: Obtener kubeconfig de AKS con Azure CLI
   hosts: localhost
   gather_facts: false
   tasks:
-    - name: Obtener kubeconfig de AKS y guardarlo en ~/.kube/config
-      azure.azcollection.azure_rm_aks_kubeconfig:
-        resource_group: "rg-casopractico2"
-        name: "aks-casopractico2"
-        path: "~/.kube/config"
-      delegate_to: localhost
+    - name: Descargar kubeconfig con az cli
+      ansible.builtin.shell: |
+        az aks get-credentials --resource-group rg-casopractico2 --name aks-casopractico2 --overwrite-existing
+      environment:
+        AZURE_CONFIG_DIR: ~/.azure
+      register: kubeconfig_result
+      changed_when: false
 
 
 
