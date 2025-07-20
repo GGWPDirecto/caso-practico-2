@@ -63,3 +63,10 @@
     definition: "{{ lookup('template', 'frontend_template.yml.j2') }}"
     namespace: "{{ app_namespace }}"
 
+- name: Exponer la aplicación de voto con un LoadBalancer
+  kubernetes.core.k8s:
+    state: present
+    definition: "{{ lookup('template', 'service_template.yml.j2') }}"
+    namespace: "{{ app_namespace }}"
+  vars:
+    item: "{{ app.vote }}"
