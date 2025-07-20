@@ -1,3 +1,17 @@
+# Generar dockerconfigjson para ACR
+- name: Generar dockerconfigjson para ACR
+  set_fact:
+    acr_dockerconfigjson: |
+      {
+        "auths": {
+          "{{ acr_login_server }}": {
+            "username": "{{ acr_username }}",
+            "password": "{{ acr_password }}",
+            "auth": "{{ (acr_username + ':' + acr_password) | b64encode }}"
+          }
+        }
+      }
+
 ---
 # Tareas para el rol de AKS
 - name: Crear namespace
