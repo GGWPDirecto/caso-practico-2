@@ -8,13 +8,15 @@
   delegate_to: localhost
 
 
-- name: Descargar imagen desde DockerHub
+
+- name: Descargar imagen desde DockerHub (solo imágenes públicas)
   community.docker.docker_image:
     name: "{{ item.source_image }}"
     source: pull
     force_source: true
   delegate_to: localhost
   loop: "{{ acr_images }}"
+  when: item.source_image is search('nginx:latest|redis:alpine|postgres:9.4')
 
 - name: Etiquetar imagen para ACR
   ansible.builtin.command: >
