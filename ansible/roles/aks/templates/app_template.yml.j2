@@ -1,41 +1,41 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ svc.name }}
+  name: {{ item.name }}
   namespace: {{ app_namespace }}
 spec:
-  replicas: {{ svc.replicas | default(1) }}
+  replicas: {{ item.replicas | default(1) }}
   selector:
     matchLabels:
-      app: {{ svc.name }}
+      app: {{ item.name }}
   template:
     metadata:
       labels:
-        app: {{ svc.name }}
+        app: {{ item.name }}
     spec:
       containers:
-        - name: {{ svc.name }}
-          image: {{ acr_login_server }}/{{ svc.name }}:{{ acr_image_tag }}
+        - name: {{ item.name }}
+          image: {{ acr_login_server }}/{{ item.name }}:{{ acr_image_tag }}
           ports:
-            - containerPort: {{ svc.port }}
-          {% if svc.pv is defined %}
+            - containerPort: {{ item.port }}
+          {% if item.pv is defined %}
           volumeMounts:
-            - name: {{ svc.pv }}
+            - name: {{ item.pv }}
               mountPath: /data
           {% endif %}
-      {% if svc.pv is defined %}
+      {% if item.pv is defined %}
       volumes:
-        - name: {{ svc.pv }}
+        - name: {{ item.pv }}
           persistentVolumeClaim:
-            claimName: {{ svc.pv }}
+            claimName: {{ item.pv }}
       {% endif %}
 ---
-{% if svc.pv is defined %}
+{% if item.pv is defined %}
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: {{ svc.pv }}
+  name: {{ item.pv }}
   namespace: {{ app_namespace }}
 spec:
   accessModes:
@@ -49,12 +49,12 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ svc.name }}
+  name: {{ item.name }}
   namespace: {{ app_namespace }}
 spec:
   selector:
-    app: {{ svc.name }}
+    app: {{ item.name }}
   ports:
     - protocol: TCP
-      port: {{ svc.port }}
-      targetPort: {{ svc.port }}
+      port: {{ item.port }}
+      targetPort: {{ item.port }}
