@@ -46,5 +46,7 @@
 - name: Desplegar servicios principales (vote)
   kubernetes.core.k8s:
     state: present
-    definition: "{{ lookup('template', 'app_template.yml.j2', item=app.vote) }}"
+    definition: "{{ lookup('template', 'app_template.yml.j2') }}"
     namespace: "{{ app_namespace }}"
+  vars:
+    item: "{{ app.vote }}"
