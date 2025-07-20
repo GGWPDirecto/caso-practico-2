@@ -17,6 +17,12 @@ variable "ssh_user" {
   default     = "azureuser"
 }
 
+variable "ssh_key_path" {
+  description = "The path to the SSH private key file."
+  type        = string
+  default     = "~/.ssh/id_rsa"
+}
+
 locals {
   common_tags = {
     # Etiquetado requerido por el caso práctico.

@@ -37,18 +37,10 @@
       data:
         .dockerconfigjson: "{{ acr_dockerconfigjson | b64encode }}"
 
-- name: Desplegar servicios principales (vote)
+- name: Desplegar aplicación de voto (Deployment y Service)
   kubernetes.core.k8s:
     state: present
     definition: "{{ lookup('template', 'app_template.yml.j2') }}"
-    namespace: "{{ app_namespace }}"
-  vars:
-    item: "{{ app.vote }}"
-
-- name: Exponer la aplicación de voto con un LoadBalancer
-  kubernetes.core.k8s:
-    state: present
-    definition: "{{ lookup('template', 'service_template.yml.j2') }}"
     namespace: "{{ app_namespace }}"
   vars:
     item: "{{ app.vote }}"

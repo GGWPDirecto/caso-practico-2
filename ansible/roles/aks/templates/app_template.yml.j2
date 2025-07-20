@@ -47,9 +47,10 @@ metadata:
   name: {{ item.name }}
   namespace: {{ app_namespace }}
 spec:
+  type: LoadBalancer
   selector:
     app: {{ item.name }}
   ports:
     - protocol: TCP
-      port: {{ item.port }}
+      port: 80
       targetPort: {{ item.port }}
