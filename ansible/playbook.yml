@@ -2,16 +2,8 @@
 - name: Configuración y Despliegue General
   hosts: localhost
   gather_facts: false
-  vars:
-    key_vault_name: "kve3uprdfi" # Reemplaza con el nombre de tu Key Vault si es diferente
-    acr_password_secret_name: "acr-password"
 
   pre_tasks:
-    - name: Obtener contraseña de ACR desde Azure Key Vault
-      ansible.builtin.set_fact:
-        acr_password: "{{ lookup('community.general.azure.key_vault_secret', secret=acr_password_secret_name, vault_url='https://' + key_vault_name + '.vault.azure.net/') }}"
-      delegate_to: localhost
-
     - name: Descargar kubeconfig con az cli
       ansible.builtin.shell: |
         az aks get-credentials --resource-group rg-casopractico2 --name aks-casopractico2 --overwrite-existing
