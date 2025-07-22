@@ -1,3 +1,18 @@
+# Terraform
+.terraform/
+terraform.tfstate
+terraform.tfstate.backup
+
+# Python venv
+.venv/
+venv/
+__pycache__/
+
+# Logs y temporales
+*.log
+
+# Otros
+.DS_Store
 # Ansible Vault secrets
 ansible/vault.yml
 # Sensitive variable files
