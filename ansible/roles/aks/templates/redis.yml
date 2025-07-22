@@ -1,13 +1,14 @@
 apiVersion: v1
-kind: Service
+kind: PersistentVolumeClaim
 metadata:
-  name: redis
+  name: redis-pvc
   namespace: voting-app
 spec:
-  ports:
-    - port: 6379
-  selector:
-    app: redis
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -24,8 +25,30 @@ spec:
       labels:
         app: redis
     spec:
+      securityContext:
+        fsGroup: 999
+        runAsUser: 999
+        runAsNonRoot: true
       containers:
       - name: redis
         image: redis:alpine
         ports:
         - containerPort: 6379
+        volumeMounts:
+        - name: redis-data
+          mountPath: /data
+      volumes:
+      - name: redis-data
+        persistentVolumeClaim:
+          claimName: redis-pvc
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: redis
+  namespace: voting-app
+spec:
+  ports:
+    - port: 6379
+  selector:
+    app: redis
