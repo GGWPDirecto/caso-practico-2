@@ -4,7 +4,7 @@ aks_cluster_name: aks-casopractico2
 # Variables globales obtenidas del inventario generado por Terraform
 acr_login_server: "{{ hostvars['acr']['inventory_hostname'] }}"
 acr_username: "{{ hostvars['acr']['acr_username'] }}"
-# La contraseña de ACR debe estar definida manualmente en vault.yml como acr_password
+# Contraseña de ACR definida en vault.yml como acr_password
 
 # Tag unificado para todas las imágenes en este proyecto
 acr_image_tag: casopractico2
