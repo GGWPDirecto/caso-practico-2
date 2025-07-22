@@ -2,7 +2,7 @@
 app_namespace: voting-app
 acr_login_server: acrimagenescp2e3uprdfi.azurecr.io
 acr_image_name: voting-app
-acr_image_tag: v1
+acr_image_tag: casopractico2
 acr_dockerconfigjson: ""
 
 # Ejemplo de estructura para la app
